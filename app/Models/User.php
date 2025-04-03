@@ -29,7 +29,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
     protected $fillable = [
         'firstname',
         'lastname',
-        'phone',
+        //'phone',
         'email',
         'password',
         'email_verified_at',
@@ -38,7 +38,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         // 'address',
         // 'country',
         'status',
-        // 'uuid'
+        'tenant_id'
     ];
 
     /**
@@ -51,7 +51,8 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         'remember_token',
         'created_at',
         'updated_at',
-        'deleted_at'
+        'deleted_at',
+        'tenant_id'
     ];
 
     /**
