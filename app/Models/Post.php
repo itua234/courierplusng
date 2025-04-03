@@ -3,17 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-// use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Post extends Model
 {
-    protected $fillable = [
-        "user_id",
-        "subject",
-        "body",
-        "status",
-        //"attachments"
-    ];
+    protected $fillable = ['title', 'content', 'tenant_id', 'user_id', 'attachments'];
 
     /**
      * Get the tenant associated with the post.
@@ -34,13 +29,13 @@ class Post extends Model
     {
         return $this->belongsTo(user::class);
     }
-    
+
     /**
      * Get the attachments associated with the post.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
     */
-    public function attachments(): hasMany
+    public function attachments(): HasMany
     {
         return $this->hasMany(Attachment::class);
     }
@@ -50,7 +45,7 @@ class Post extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
     */
-    public function comments(): hasMany
+    public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
     }
@@ -60,7 +55,7 @@ class Post extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
     */
-    public function likes(): hasMany
+    public function likes(): HasMany
     {
         return $this->hasMany(Like::class);
     }

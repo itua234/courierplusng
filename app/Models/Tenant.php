@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Tenant extends Model
 {
@@ -19,8 +21,18 @@ class Tenant extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
     */
-    public function users(): hasMany
+    public function users(): HasMany
     {
         return $this->hasMany(User::class);
+    }
+
+    /**
+     * Get the posts associated with the tenant.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+    */
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
     }
 }
