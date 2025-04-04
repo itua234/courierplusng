@@ -17,17 +17,17 @@ return Application::configure(basePath: dirname(__DIR__))
     
             foreach ($centralDomains as $domain) {
                 Route::middleware('web')
-                    ->domain($domain)
-                    ->namespace($namespace)
-                    ->group(base_path('routes/web.php'));
+                ->domain($domain)
+                ->namespace($namespace)
+                ->group(base_path('routes/web.php'));
             }
 
             foreach ($centralDomains as $domain) {
-                    Route::prefix('api')
-                    ->middleware('api')
-                    ->domain($domain)
-                    ->namespace($namespace)
-                    ->group(base_path('routes/api.php'));
+                Route::prefix('api')
+                ->middleware('api')
+                ->domain($domain)
+                ->namespace($namespace)
+                ->group(base_path('routes/api.php'));
             }
     
             Route::middleware('web')->group(base_path('routes/tenant.php'));

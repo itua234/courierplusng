@@ -62,3 +62,63 @@ $tenant2 = App\Models\Tenant::create([
     ],
 ]);
 $tenant2->domains()->create(['domain' => 'bar.localhost']);
+
+
+
+
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
+use App\Models\Tenant;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Stancl\Tenancy\TenantManager;
+
+class TenantRegistrationController extends Controller
+{
+    public function register(Request $request)
+    {
+        // Step 1: Validate the request
+        $validated = $request->validate([
+            'tenant_name' => 'required|string|max:255|unique:tenants,data->name',
+            'domain' => 'required|string|unique:domains,domain',
+            'firstname' => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        // Step 2: Create the tenant
+        $tenant = Tenant::create([
+            'id' => uniqid(), // Generate a unique tenant ID
+            'data' => [
+                'name' => $validated['tenant_name'],
+            ],
+        ]);
+
+        // Step 3: Create the tenant's database
+        $tenant->createDatabase();
+
+        // Step 4: Associate a domain with the tenant
+        $tenant->domains()->create(['domain' => $validated['domain']]);
+
+        // Step 5: Run the tenant's database connection
+        tenancy()->initialize($tenant);
+
+        // Step 6: Create the user in the tenant's database
+        $user = User::create([
+            'firstname' => $validated['firstname'],
+            'lastname' => $validated['lastname'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+        ]);
+
+        // Step 7: Return a success response
+        return response()->json([
+            'message' => 'Tenant and user created successfully!',
+            'tenant' => $tenant,
+            'user' => $user,
+        ]);
+    }
+}
