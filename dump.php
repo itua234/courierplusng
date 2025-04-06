@@ -122,3 +122,17 @@ class TenantRegistrationController extends Controller
         ]);
     }
 }
+
+
+public function approveUser(User $user)
+{
+    $tenant = Tenant::create([
+        'name' => $user->name . "'s Blog",
+        'domain' => strtolower(str_replace(' ', '-', $user->name)) . '.myblog.com',
+    ]);
+
+    $user->update([
+        'status' => 'approved',
+        'tenant_id' => $tenant->id,
+    ]);
+}
