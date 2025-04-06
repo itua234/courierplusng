@@ -5,10 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Ramsey\Uuid\Uuid;
 
 class Post extends Model
 {
-    protected $fillable = ['title', 'content', 'tenant_id', 'user_id', 'attachments'];
+    protected $fillable = [
+        'title', 
+        'uuid',
+        'content', 
+        'tenant_id', 
+        'user_id', 
+        'attachments'
+    ];
 
     /**
      * Get the tenant associated with the post.

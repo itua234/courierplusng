@@ -23,7 +23,7 @@ class Admin extends Authenticatable implements CanResetPassword
         'firstname',
         'lastname',
         'email',
-        'password',
+        'password'
     ];
 
     protected $hidden = [
