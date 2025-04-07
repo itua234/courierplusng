@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Support\Str;
 
 class Post extends Model
 {
@@ -13,11 +14,32 @@ class Post extends Model
 
     protected $fillable = [
         'title', 
+        'slug',
         'content', 
         'tenant_id', 
-        'user_id', 
-        'attachments'
+        'user_id',
+        'visibility',
+        'status',
+        'image',
+        'slug'
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function (Post $post) {
+            if (empty($post->slug)) {
+                $post->slug = Str::slug($post->title);
+            }
+        });
+
+        static::updating(function (Post $post) {
+            if ($post->isDirty('title')) {
+                $post->slug = Str::slug($post->title);
+            }
+        });
+    }
 
     /**
      * Get the tenant associated with the post.
@@ -37,16 +59,6 @@ class Post extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    /**
-     * Get the attachments associated with the post.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-    */
-    public function attachments(): HasMany
-    {
-        return $this->hasMany(Attachment::class);
     }
 
     /**

@@ -16,15 +16,21 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Tenant extends BaseTenant implements TenantWithDatabase
+class Tenant extends Model
+//class Tenant extends BaseTenant implements TenantWithDatabase
 {
-    use HasDatabase, HasDomains;
+    //use HasDatabase, HasDomains;
     /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
     */
-    protected $fillable = ['id', 'data'];
+    protected $fillable = [
+        //'id',
+        'name',
+        'database',
+        'data'
+    ];
 
     protected $casts = [
         'data' => 'array', // Ensure 'data' is cast properly

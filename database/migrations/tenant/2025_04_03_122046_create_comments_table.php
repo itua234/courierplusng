@@ -16,6 +16,7 @@ return new class extends Migration
             $table->text('content');
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Author
             $table->foreignId('post_id')->constrained()->onDelete('cascade'); // Post
+            //$table->foreignId('tenant_id')->constrained()->onDelete('cascade'); //Tenant
             $table->timestamps();
         });
     }

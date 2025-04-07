@@ -26,9 +26,9 @@ class CreatePostRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'content' => 'required|string|max:255',
-            'attachments' => 'array',
-            'attachments.*' => 'file|mimes:jpg,jpeg,png,gif,doc,docx,pdf|max:2048', // 2MB max
-            //'user_id' => 'required|exists:users,id'
+            'image' => 'nullable|file|mimes:jpg,jpeg,png,gif,doc,docx,pdf|max:2048', // 2MB max
+            // 'image' => 'array',
+            // 'image.*' => 'file|mimes:jpg,jpeg,png,gif,doc,docx,pdf|max:2048', // 2MB max
         ];
     }
 
