@@ -80,8 +80,10 @@ class AuthService
     // }
 
     public static function login($request){
-        if(Auth::attempt(['email'=>sanitize_input($request->email), 'password'=>sanitize_input($request->password)], true)){
-            
+        if(Auth::attempt([
+            'email'=>sanitize_input($request->email), 
+            'password'=>sanitize_input($request->password)
+        ], true)){
             $request->session()->regenerate();
             return redirect()->route('dashboard');
         }

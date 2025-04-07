@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Ramsey\Uuid\Uuid;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class Post extends Model
 {
+    use HasUuids;
+
     protected $fillable = [
         'title', 
-        'uuid',
         'content', 
         'tenant_id', 
         'user_id', 
