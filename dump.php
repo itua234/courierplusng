@@ -136,3 +136,21 @@ public function approveUser(User $user)
         'tenant_id' => $tenant->id,
     ]);
 }
+
+@foreach($pendingTenants as $tenant)
+    <div class="tenant-request">
+        <h3>{{ $tenant->name }}</h3>
+        <p>Requested by: {{ $tenant->user->email }}</p>
+        <div class="actions">
+            <form action="{{ route('admin.tenants.approve', $tenant) }}" method="POST">
+                @csrf
+                <button type="submit">Approve</button>
+            </form>
+            <form action="{{ route('admin.tenants.reject', $tenant) }}" method="POST">
+                @csrf
+                <input type="text" name="reason" placeholder="Rejection reason">
+                <button type="submit">Reject</button>
+            </form>
+        </div>
+    </div>
+@endforeach

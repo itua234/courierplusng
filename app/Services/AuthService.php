@@ -23,28 +23,73 @@ class AuthService
 {
     protected $tokenName = 'user-token';
 
-    public function register($data){
-        //create user
-        $result =  DB::transaction(function() use($data){
-            $user = User::create([
-                'firstname' => sanitize_input($data['firstname']),
-                'lastname' => sanitize_input($data['lastname']),
-                'email' => sanitize_input($data['email']),
-                'phone' => sanitize_input($data['phone']),
-                'password' => sanitize_input($data['password']),
-                'uuid' => Uuid::uuid4()->toString()
-            ]);    
+    // public function register($data){
+    //     //create user
+    //     $result =  DB::transaction(function() use($data){
+    //         $user = User::create([
+    //             'firstname' => sanitize_input($data['firstname']),
+    //             'lastname' => sanitize_input($data['lastname']),
+    //             'email' => sanitize_input($data['email']),
+    //             'phone' => sanitize_input($data['phone']),
+    //             'password' => sanitize_input($data['password']),
+    //             'uuid' => Uuid::uuid4()->toString()
+    //         ]);    
 
-            $user->wallet()->create();
-            $user->profile()->create();
+    //         $user->wallet()->create();
+    //         $user->profile()->create();
             
-            event(new Registered($user));
+    //         event(new Registered($user));
 
-            Auth::login($user, true);
+    //         Auth::login($user, true);
 
-            return $user;
+    //         return $user;
+    //     });
+    //     return redirect()->route('dashboard');
+    // }
+    /**
+     * Register a new tenant and create their database schema
+     *
+     * @param  array  $data  [
+     *     'firstname' => string,
+     *     'lastname' => string,
+     *     'email' => string,
+     *     'password' => string
+     * ]
+     * @return \App\Models\Tenant
+     * @throws \Throwable
+    */
+    public function register(array $data): Tenant
+    {
+        return DB::transaction(function () use ($data) {
+            $tenant = Tenant::create([
+                'name' => $data->firstname . '- ' . $data->lastname,
+                'database' => 'tenant_' . Str::random(8)
+            ]);
+            $schema = $tenant->database;
+            // Create schema
+            DB::statement("CREATE SCHEMA IF NOT EXISTS `{$schema}`");
+            
+            // Run migrations in the new schema
+            Artisan::call('tenants:migrate', [
+                '--schema' => $schema
+            ]);
+            
+            // Create user
+            DB::connection('tenant')->table('users')->insert([
+                'firstname' => $data['firstname'],
+                'lastname' => $data['lastname'],
+                'email' => $data['email'],
+                'password' => $data['password'],
+                'created_at' => now(),
+                'updated_at' => now(),
+                'tenant_id' => $tenant->id
+            ]);
+
+            return $tenant;
         });
-        return redirect()->route('dashboard');
+        
+        // Notify admin
+        //$this->tenant->update(['status' => 'active']);
     }
 
     // public function login($data){
