@@ -6,12 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 //use App\Http\Resources\PostResource;
 use App\Util\ResponseFormatter;
-use App\Models\Tenant;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 
-class PostService 
+class AdminService 
 {
     public function index(){
         $users = User::all();
