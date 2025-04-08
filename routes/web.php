@@ -3,9 +3,20 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TenantController;
+use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
     return view('welcome');
+});
+Route::get('/register', [AuthController::class, 'register']);
+Route::group(['middleware' => ['tenant']], function () {
+    Route::group([
+        'prefix' => ''
+    ], function () {
+        Route::get('/', function () {
+            return \App\Models\User::all();
+        });
+    });
 });
 
 Route::group(['middleware' => []], function () {

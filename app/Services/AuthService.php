@@ -3,13 +3,9 @@
 namespace App\Services;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\{URL, Password, DB, Mail, Auth};
-//use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Facades\{URL, DB, Auth};
 use Illuminate\Support\Str;
 //use App\Http\Resources\UserResource;
-//use App\Services\UserService;
-//use App\Mail\PasswordResetMail;
-//use App\Mail\WelcomeMail;
 use App\Util\ResponseFormatter;
 use App\Models\Tenant;
 use App\Models\User;
@@ -17,7 +13,8 @@ use Carbon\Carbon;
 use Illuminate\Auth\Events\Registered;
 //use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Facades\Hash;
-use Stancl\Tenancy\TenantManager;
+//use Stancl\Tenancy\TenantManager;
+use Illuminate\Support\Facades\Artisan;
 
 class AuthService 
 {
@@ -60,36 +57,33 @@ class AuthService
     */
     public function register(array $data): Tenant
     {
-        return DB::transaction(function () use ($data) {
-            $tenant = Tenant::create([
-                'name' => $data->firstname . '- ' . $data->lastname,
-                'database' => 'tenant_' . Str::random(8)
-            ]);
-            $schema = $tenant->database;
-            // Create schema
-            DB::statement("CREATE SCHEMA IF NOT EXISTS `{$schema}`");
-            
-            // Run migrations in the new schema
-            Artisan::call('tenants:migrate', [
-                '--schema' => $schema
-            ]);
-            
-            // Create user
-            DB::connection('tenant')->table('users')->insert([
-                'firstname' => $data['firstname'],
-                'lastname' => $data['lastname'],
-                'email' => $data['email'],
-                'password' => $data['password'],
-                'created_at' => now(),
-                'updated_at' => now(),
-                'tenant_id' => $tenant->id
-            ]);
-
-            return $tenant;
-        });
+        // Create a new tenant
+        $tenant = Tenant::create([
+            'name' => Str::slug($data['firstname'] . '-' . $data['lastname']) . '-' . Str::random(5).'.localhost', // Generate a unique, URL-safe name
+            'database' => 'tenant_' . Str::random(8)
+        ]);
+        $schema = $tenant->database;
+        // Create schema
+        DB::statement("CREATE SCHEMA IF NOT EXISTS `{$schema}`");
         
-        // Notify admin
-        //$this->tenant->update(['status' => 'active']);
+        // Run migrations in the new schema
+        Artisan::call('tenants:migrate', [
+            '--schema' => $schema
+        ]);
+        
+        // Create user
+        DB::connection('tenant')->table('users')->insert([
+            'firstname' => $data['firstname'],
+            'lastname' => $data['lastname'],
+            'email' => $data['email'],
+            'email_verified_at' => now(),
+            'password' => Hash::make($data['password']),
+            'created_at' => now(),
+            'updated_at' => now(),
+            'tenant_id' => $tenant->id
+        ]);
+
+        return $tenant;
     }
 
     // public function login($data){
@@ -134,18 +128,6 @@ class AuthService
         }
         Session(['msg'=>'Invalid Login Credentials', 'alert'=>'danger']);
         return redirect()->back();
-    }
-
-    public function logOut(Request $request)
-    {
-        //delete all previous user token
-        $this->deleteToken(auth()->user());
-
-        //Auth::guard("user")->logout();
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        return redirect("/login");
     }
 
     private function generateToken($user)

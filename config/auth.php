@@ -63,6 +63,7 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
+            'connection' => 'tenant',  // Specify tenant connection for auth
         ],
 
         // 'users' => [
