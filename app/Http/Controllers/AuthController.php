@@ -30,36 +30,9 @@ class AuthController extends Controller
     */
     public function register(RegisterRequest $request)
     {
-        return $validated = $request->validated();
-        // Validate the request data
-        $data = $request->validate([
-            'firstname' => 'required|string|max:255',
-            'lastname' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
-        ]);
+        $validated = $request->validated();
 
-        return $request->all();
-
-        return $this->authService->register($request->all());
-
-        // $data = [
-        //     'firstname' => 'John',
-        //     'lastname' => 'Doe',
-        //     'email' => 'john.doe@example.com',
-        //     'password' => 'password123'
-        // ];
-        // $request = new Request();
-        // $request->merge($data);
-        // $data = $request->validate([
-        //     'firstname' => 'required|string|max:255',
-        //     'lastname' => 'required|string|max:255',
-        //     'email' => 'required|string|email|max:255|unique:users',
-        //     'phone' => 'required|string|max:15',
-        //     'password' => 'required|string|min:8|confirmed',
-        // ]);
-
-        // return $this->authService->register($request->all());
+        return $this->authService->register($request->validated());
     }
 
     public function createTenant(Request $request){

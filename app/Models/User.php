@@ -22,6 +22,13 @@ class User extends Authenticatable implements CanResetPassword
     use HasApiTokens, HasFactory, Notifiable, HasUuids;
 
     /**
+     * The data type of the primary key ID.
+     *
+     * @var string
+     */
+    protected $keyType = 'string';
+    
+    /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
@@ -97,14 +104,6 @@ class User extends Authenticatable implements CanResetPassword
         return Attribute::make(
             get: fn ($value) => $value,
             set: fn ($value) => strtolower($value),
-        );
-    }
-
-    protected function isVerified(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => ($value == 0) ? false : true,
-            set: fn ($value) => $value
         );
     }
 
