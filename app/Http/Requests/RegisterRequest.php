@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
+use App\Rules\ContainsNumber;
+use App\Rules\HasSpecialCharacter;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class RegisterRequest extends FormRequest
@@ -37,12 +39,12 @@ class RegisterRequest extends FormRequest
         ];
     }
 
-    protected function failedValidation(Validator $validator) {
-        throw new HttpResponseException(
-            response([
-                'message' => $validator->errors()->first(),
-                'error' => $validator->getMessageBag()->toArray()
-            ], 422)
-        );
-    }
+    // protected function failedValidation(Validator $validator) {
+    //     throw new HttpResponseException(
+    //         response([
+    //             'message' => $validator->errors()->first(),
+    //             'error' => $validator->getMessageBag()->toArray()
+    //         ], 422)
+    //     );
+    // }
 }

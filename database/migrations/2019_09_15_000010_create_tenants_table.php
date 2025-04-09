@@ -18,8 +18,8 @@ class CreateTenantsTable extends Migration
         Schema::create('tenants', function (Blueprint $table) {
             $table->id();
             //$table->string('id')->primary();
-            $table->string('name');
-            $table->string('database');
+            $table->string('name')->nullable();
+            $table->string('database')->nullable();
             //$table->index(['data->domain']); // Index on the JSON field for faster lookups)
             $table->timestamps();
             $table->json('data')->nullable();
