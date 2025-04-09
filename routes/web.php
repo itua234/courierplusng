@@ -4,12 +4,16 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PostController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 Route::get('/register', [AuthController::class, 'showSignupForm'])->name("register");
 Route::post('/register', [AuthController::class, 'register'])->name('user-signup');
+Route::get('/login', [AuthController::class, 'showloginForm'])->name("login");
+Route::post('/login', [AuthController::class, 'login'])->name('signin');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 // Route::group(['middleware' => ['tenant']], function () {
 //     Route::group([
 //         'prefix' => ''
@@ -20,6 +24,8 @@ Route::post('/register', [AuthController::class, 'register'])->name('user-signup
 //         });
 //     });
 // });
+Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
+Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
 
 Route::group(['middleware' => []], function () {
     Route::group([

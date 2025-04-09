@@ -7,6 +7,7 @@ use App\Services\AuthService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\LoginRequest;
 
 class AuthController extends Controller
 {
@@ -20,6 +21,11 @@ class AuthController extends Controller
     public function showSignupForm(): View
     {
         return view('auth.register');
+    }
+
+    public function showLoginForm(): View
+    {
+        return view('auth.login');
     }
 
     /**
@@ -38,5 +44,17 @@ class AuthController extends Controller
     public function createTenant(Request $request){
         $name = "itua-blog";
         return $this->adminService->createTenant($name);
+    }
+
+    public function login(LoginRequest $request)
+    {
+        $validated = $request->validated();
+
+        return $this->authService->login($request);
+    }
+
+    public function logout(Request $request)
+    {
+        return $this->authService->logout($request);
     }
 }

@@ -68,23 +68,33 @@ class AuthService
             'email_verified_at' => now(),
             'password' => $data['password']
         ]);
-        return $user;
 
-        return Auth::guard("web")->login($user, true);
-        return redirect()->route('/dashboard')->with('success', 'Registration successful!');
+        Auth::login($user, true);
+        return redirect('/')->with('success', 'Registration successful!');
     }
 
-    // public static function login($request){
-    //     if(Auth::attempt([
-    //         'email'=>sanitize_input($request->email), 
-    //         'password'=>sanitize_input($request->password)
-    //     ], true)){
-    //         $request->session()->regenerate();
-    //         return redirect()->route('dashboard');
-    //     }
-    //     Session(['msg'=>'Invalid Login Credentials', 'alert'=>'danger']);
-    //     return redirect()->back();
-    // }
+    public static function login($request){
+        if(Auth::attempt([
+            'email'=> $request->email,
+            'password'=> $request->password
+        ], true)){
+            $request->session()->regenerate();
+            return redirect('/')->with('success', 'Login successful!');
+        }
+        Session(['msg'=>'Invalid Login Credentials', 'alert'=>'danger']);
+        return redirect()->back();
+    }
+
+    public function logOut(Request $request)
+    {
+        //delete all previous user token
+        $this->deleteToken(auth()->user());
+
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect("/")->with('success', 'Logout successful!');
+    }
 
     private function generateToken($user)
     {

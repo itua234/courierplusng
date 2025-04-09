@@ -68,7 +68,11 @@
             @guest
                 <!-- Show Register button if user is not authenticated -->
                 <a href="{{ route('register') }}" class="btn btn-success">Register</a>
+                <!-- Show Register button if user is not authenticated -->
+                <a href="{{ route('login') }}" class="btn btn-success">Login</a>
             @else
+                <!-- Show Logout button if user is authenticated -->
+                <a href="{{ route('logout') }}" class="btn btn-success">Logout</a>
                 <!-- Show Add Post button if user is authenticated -->
                 <a href="{{ route('posts.create') }}" class="btn btn-primary">Add Post</a>
             @endguest
