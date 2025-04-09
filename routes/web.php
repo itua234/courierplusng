@@ -27,21 +27,21 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
 Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
 
-Route::group(['middleware' => []], function () {
-    Route::group([
-        'prefix' => 'admin'
-    ], function () {
-        Route::get('/', function () {
-            return view('welcome');
-        });
-        //Route::get('/', [AdminController::class, 'index']);
-        Route::get('/posts', function () {
-            return \App\Models\Post::all();
-            return 'This is the posts page';
-        });
-        Route::get('/create-tenant', [AdminController::class, 'createTenant']);
-        // Route::get('/', [AdminController::class, 'index']);
-        // Route::get('/users', [AdminController::class, 'fetchUsers']);
-        // Route::get('/posts', [AdminController::class, 'fetchPosts']);
-    });
-});
+// Route::group(['middleware' => []], function () {
+//     Route::group([
+//         'prefix' => 'admin'
+//     ], function () {
+//         Route::get('/', function () {
+//             return view('welcome');
+//         });
+//         //Route::get('/', [AdminController::class, 'index']);
+//         Route::get('/posts', function () {
+//             return \App\Models\Post::all();
+//             return 'This is the posts page';
+//         });
+//         Route::get('/create-tenant', [AdminController::class, 'createTenant']);
+//         // Route::get('/', [AdminController::class, 'index']);
+//         // Route::get('/users', [AdminController::class, 'fetchUsers']);
+//         // Route::get('/posts', [AdminController::class, 'fetchPosts']);
+//     });
+// });

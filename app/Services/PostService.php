@@ -13,12 +13,29 @@ use Illuminate\Auth\Events\Registered;
 
 class PostService 
 {
-    public function index(){
-        $users = User::all();
-        return ResponseFormatter::success("All Users:", $users, 200);
+    /**
+     * Show the form for creating a new post.
+     *
+     * @return \Illuminate\View\View
+    */
+    public function create()
+    {
+        return view('posts.create');
     }
 
-    public function create(){
-        
+    public function store($request)
+    {
+        return $request->all();
+        $post = new Post();
+        $post->title = $request->title;
+        $post->content = $request->content;
+
+        if ($request->hasFile('image')) {
+            $post->image = $request->file('image')->store('posts', 'public');
+        }
+
+        $post->save();
+
+        return redirect()->route('home')->with('success', 'Post created successfully!');
     }
 }
