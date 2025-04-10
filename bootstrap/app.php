@@ -13,30 +13,6 @@ return Application::configure(basePath: dirname(__DIR__))
         //commands: __DIR__.'/../routes/console.php',
         channels: __DIR__.'/../routes/channels.php',
         health: '/up',
-        // using: function () {
-        //     $centralDomains = config('tenancy.central_domains');
-        //     $namespace = 'App\\Http\\Controllers'; // Define the namespace explicitly
-    
-        //     foreach ($centralDomains as $domain) {
-        //         Route::middleware('web')
-        //         ->domain($domain)
-        //         ->namespace($namespace)
-        //         ->group(base_path('routes/web.php'));
-        //     }
-
-        //     foreach ($centralDomains as $domain) {
-        //         Route::prefix('api')
-        //         ->middleware('api')
-        //         ->domain($domain)
-        //         ->namespace($namespace)
-        //         ->group(base_path('routes/api.php'));
-        //     }
-    
-        //     Route::middleware('web')->group(base_path('routes/tenant.php'));
-        // }
-        // apiVersion: 'v1',
-        // apiMiddleware: 'api',
-        // apiVersionMiddleware: 'api.version',
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([

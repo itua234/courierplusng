@@ -33,7 +33,7 @@ This project aims to demonstrate the implementation of multi-tenancy, robust aut
 
 1.  **Clone the repository:**
     ```bash
-    git clone <repository_url>
+    git clone <https://github.com/itua234/courierplusng.git>
     cd multi-tenant-blog
     ```
 
