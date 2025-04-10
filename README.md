@@ -68,3 +68,11 @@ This project aims to demonstrate the implementation of multi-tenancy, robust aut
 ## Database Setup
 
 Ensure you have a database configured in your `.env` file. The migrations will create the necessary tables for users, tenants, blog posts, and Sanctum personal access tokens.
+
+## Web Interface
+/register: User registration form.
+/login: User login form.
+/logout: User logout button (shows when user is authenticated)
+/admin: (Admin only) Dashboard to view pending users and approve/reject them, and view all posts.
+/: (Tenant only) Dashboard to manage their own blog posts.
+/posts: (Tenant only) List of their blog posts.

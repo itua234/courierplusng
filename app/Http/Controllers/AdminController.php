@@ -22,9 +22,9 @@ class AdminController extends Controller
     //     return $this->adminService->getUserData();
     // }
 
-    // public function getPostData($postId){
-    //     return $this->adminService->getPostData($postId);
-    // }
+    public function getPosts(){
+        return $this->adminService->getPosts();
+    }
 
     public function approveUser($userId){
         return $this->adminService->approve($userId);

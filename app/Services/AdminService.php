@@ -97,10 +97,12 @@ class AdminService
     //     return ResponseFormatter::success("User Data:", $user, 200);
     // }
 
-    // public function getPostData($postId){
-    //     $post = Post::find($postId);
-    //     return ResponseFormatter::success("Post Data:", $post, 200);
-    // }
+    public function getPosts(){
+        $posts = Post::with('user')->paginate(10);
+        return view('admin.posts', [
+            'posts' => $posts
+        ]);
+    }
 
     public function approve($userId)
     {

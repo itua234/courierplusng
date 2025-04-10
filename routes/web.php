@@ -35,7 +35,7 @@ Route::group([
     ], function () {
         Route::get('/', [AdminController::class, 'index'])->name('admin');
         //Route::get('/users', [AdminController::class, 'getUser'])->name('admin.users');
-        //Route::get('/posts', [AdminController::class, 'getPostData'])->name('admin.posts');
+        Route::get('/posts', [AdminController::class, 'getPosts'])->name('admin.posts');
         Route::get('/approve-user/{userId}', [AdminController::class, 'approveUser'])->name('admin.approve-user');
     });
 });
