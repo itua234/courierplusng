@@ -14,8 +14,8 @@ use Illuminate\Auth\Events\Registered;
 class UserService 
 {
     public function index(){
-        $users = User::all();
-        return ResponseFormatter::success("All Users:", $users, 200);
+        $posts = Post::all();
+        return view('welcome', compact('posts'));
     }
 
     public function create(){

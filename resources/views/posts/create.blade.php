@@ -73,8 +73,6 @@
         event.preventDefault();
         let url = $(this).data('url');
 
-         // Create a FormData object to handle file uploads
-        let formData = new FormData(this);
         payload = {
             image: $(this).find('input[name="image"]')[0].file,
             //_token: $("input[name='_token']").val(),
@@ -87,11 +85,10 @@
         btn.html(`<img src="{{asset('assets/images/loader.gif')}}" id="loader-gif">`);
         btn.attr("disabled", true);
 
-        formData.forEach((value, key) => {
-            console.log(key, value);
-        });
-        console.log("Meta CSRF Token:", $("meta[name='csrf-token']").attr("content"));
-        console.log("Form CSRF Token:", $("input[name='_token']").val());
+        // formData.forEach((value, key) => {
+        //     console.log(key, value);
+        // });
+        
         const config = {
             headers: {
                 Accept: "application/json",
@@ -102,8 +99,8 @@
         };
         axios.post(url, payload, config)
         .then((res) => {
-            let data = res.data.results;
-            //$(".photo").attr("src", data.photo);
+            let data = res.data;
+            window.location.href = res.data.redirect_url;
         }) .catch(function(error){
             let errors = error.response.data.error;
             // if(errors.current_password){

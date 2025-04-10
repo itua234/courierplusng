@@ -17,39 +17,44 @@ use Illuminate\Support\Facades\DB;
 
 class AdminService 
 {
-    public function idex(){
+    public function index(){
         $users = User::all();
         $posts = Post::all();
-        return ResponseFormatter::success(
-            "All Data:", 
-            ["users" => $users, "posts" => $posts], 
-            200
-        );
+
+        return view('admin.index', [
+            'users' => $users,
+            'posts' => $posts
+        ]);
+        // return ResponseFormatter::success(
+        //     "All Data:", 
+        //     ["users" => $users, "posts" => $posts], 
+        //     200
+        // );
     }
-    public function index()
-    {
-        $allUsers = collect();
-        $tenants = Tenant::all(); // From central database
+    // public function index()
+    // {
+    //     $allUsers = collect();
+    //     $tenants = Tenant::all(); // From central database
         
-        foreach ($tenants as $tenant) {
-            // Connect to each tenant database
-            Config::set('database.connections.tenant.database', $tenant->database);
-            DB::reconnect('tenant');
+    //     foreach ($tenants as $tenant) {
+    //         // Connect to each tenant database
+    //         Config::set('database.connections.tenant.database', $tenant->database);
+    //         DB::reconnect('tenant');
             
-            // Get users from this tenant
-            $tenantUsers = DB::connection('tenant')->table('users')->get();
+    //         // Get users from this tenant
+    //         $tenantUsers = DB::connection('tenant')->table('users')->get();
             
-            // Add tenant identifier to each user
-            $tenantUsers->each(function($user) use ($tenant) {
-                $user->tenant_name = $tenant->name;
-            });
+    //         // Add tenant identifier to each user
+    //         $tenantUsers->each(function($user) use ($tenant) {
+    //             $user->tenant_name = $tenant->name;
+    //         });
             
-            // Merge with main collection
-            $allUsers = $allUsers->merge($tenantUsers);
-        }
+    //         // Merge with main collection
+    //         $allUsers = $allUsers->merge($tenantUsers);
+    //     }
         
-        return $allUsers;
-    }
+    //     return $allUsers;
+    // }
     
     // public function indhhhhex()
     // {
@@ -87,25 +92,30 @@ class AdminService
     //     return $result;
     // }
 
-    public function getUserData(){
-        $user = User::find(Auth::user()->id);
-        return ResponseFormatter::success("User Data:", $user, 200);
-    }
+    // public function getUserData(){
+    //     $user = User::find(Auth::user()->id);
+    //     return ResponseFormatter::success("User Data:", $user, 200);
+    // }
 
-    public function getPostData($postId){
-        $post = Post::find($postId);
-        return ResponseFormatter::success("Post Data:", $post, 200);
-    }
+    // public function getPostData($postId){
+    //     $post = Post::find($postId);
+    //     return ResponseFormatter::success("Post Data:", $post, 200);
+    // }
 
     public function approve($userId)
     {
         $user = User::findOrFail($userId);
-        $user->update(['status' => 'approved']);
+        $schema = 'tenant_' . Str::random(8);
 
-        // Tenant::create([
-        //     'user_id' => $user->id,
-        //     'blog_name' => $user->name . "'s Blog",
-        // ]);
+        $tenant = Tenant::create([
+            'name' => $user->firstname."-".$user->lastname. "'s Blog",
+            'database' => $schema
+        ]);
+
+        $user->update([
+            'status' => 'approved',
+            'tenant_id' => $tenant->id
+        ]);
 
         return back()->with('message', 'Tenant approved');
     }

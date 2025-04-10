@@ -38,6 +38,14 @@ class PostService
 
         $post->save();
 
+        // Return a JSON response with the redirect URL
+        return response()->json([
+            'success' => true,
+            'message' => 'Post created successfully!',
+            'redirect_url' => url('/'), // Replace with the desired redirect URL
+        ]);
+        //'redirect_url' => route('posts.show', $post->id),
+
         return redirect('/')->with('success', 'Post created successfully!');
     }
 
@@ -77,5 +85,19 @@ class PostService
         $post->delete();
 
         return ResponseFormatter::success('Post deleted successfully!', null);
+    }
+
+    public function show($id)
+    {
+        $post = Post::findOrFail($id);
+        return view('posts.show', compact('post'));
+    }
+
+    public function deletePost($id)
+    {
+        $post = Post::findOrFail($id);
+        $post->delete();
+
+        return redirect('/')->with('success', 'Post deleted successfully!');
     }
 }

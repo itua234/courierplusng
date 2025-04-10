@@ -44,6 +44,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->validateCsrfTokens(except: [
             'posts/store',
+            'posts/*',
             // 'http://127.0.0.1:8000/posts/*',
             // //'http://example.com/foo/*',
         ]);

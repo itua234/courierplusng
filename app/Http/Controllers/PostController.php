@@ -68,4 +68,14 @@ class PostController extends Controller
     {
         return $this->postService->getPostById($id);
     }
+
+    public function show($id)
+    {
+        return $this->postService->show($id);
+    }
+
+    public function deletePost($id)
+    {
+        return $this->postService->deletePost($id);
+    }
 }

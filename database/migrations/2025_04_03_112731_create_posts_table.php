@@ -22,8 +22,10 @@ return new class extends Migration
             // $table->string('tags')->nullable(); // comma-separated tags
             // $table->string('excerpt')->nullable(); // short description
             $table->text('content');
-            $table->foreignId('tenant_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Author
+            $table->uuid('tenant_id')->nullable();
+            $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
+            $table->uuid('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

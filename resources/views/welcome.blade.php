@@ -73,45 +73,29 @@
             @else
                 <!-- Show Logout button if user is authenticated -->
                 <a href="{{ route('logout') }}" class="btn btn-success">Logout</a>
-                <!-- Show Add Post button if user is authenticated -->
-                <a href="{{ route('posts.create') }}" class="btn btn-primary">Add Post</a>
+                <!-- Show Add Post button only if user status is approved -->
+                @if(auth()->user()->status === 'approved')
+                    <a href="{{ route('posts.create') }}" class="btn btn-primary">Add Post</a>
+                @else
+                    <p class="text-danger mt-2">Your account is not approved to add posts.</p>
+                @endif
             @endguest
         </div>
 
         <main class="container mt-4">
             <div class="row">
                 <!-- Blog Post 1 -->
-                <div class="col-md-4">
-                    <div class="blog-post">
-                        <img src="{{asset('assets/images/blog/post1.jpg')}}" alt="Blog Post 1">
-                        <h2 class="blog-post-title">Blog Post Title 1</h2>
-                        <p class="blog-post-meta">Published on {{ now()->format('M d, Y') }}</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum...</p>
-                        <a href="#" class="btn btn-primary btn-sm">Read More</a>
+                @foreach($posts as $post)
+                    <div class="col-md-4">
+                        <div class="blog-post">
+                            <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}" class="img-fluid">
+                            <h2 class="blog-post-title">{{ $post->title }}</h2>
+                            <p class="blog-post-meta">Published on {{ $post->created_at->format('M d, Y') }}</p>
+                            <p>{{ Str::limit($post->content, 100, '...') }}</p>
+                            <a href="{{ route('posts.show', ['id' => $post->id]) }}" class="btn btn-primary btn-sm">Read More</a>
+                        </div>
                     </div>
-                </div>
-
-                <!-- Blog Post 2 -->
-                <div class="col-md-4">
-                    <div class="blog-post">
-                        <img src="{{asset('assets/images/blog/post2.jpg')}}" alt="Blog Post 2">
-                        <h2 class="blog-post-title">Blog Post Title 2</h2>
-                        <p class="blog-post-meta">Published on {{ now()->format('M d, Y') }}</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum...</p>
-                        <a href="#" class="btn btn-primary btn-sm">Read More</a>
-                    </div>
-                </div>
-
-                <!-- Blog Post 3 -->
-                <div class="col-md-4">
-                    <div class="blog-post">
-                        <img src="{{asset('assets/images/blog/post3.jpg')}}" alt="Blog Post 3">
-                        <h2 class="blog-post-title">Blog Post Title 3</h2>
-                        <p class="blog-post-meta">Published on {{ now()->format('M d, Y') }}</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum...</p>
-                        <a href="#" class="btn btn-primary btn-sm">Read More</a>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </main>
 

@@ -18,20 +18,20 @@ class AdminController extends Controller
         return $this->adminService->index();
     }
 
-    public function getUser(){
-        return $this->adminService->getUserData();
-    }
+    // public function getUser(){
+    //     return $this->adminService->getUserData();
+    // }
 
-    public function getPostData($postId){
-        return $this->adminService->getPostData($postId);
-    }
+    // public function getPostData($postId){
+    //     return $this->adminService->getPostData($postId);
+    // }
 
     public function approveUser($userId){
         return $this->adminService->approve($userId);
     }
 
-    public function createTenant(Request $request){
-        $name = "itua-blog";
-        return $this->adminService->createTenant($name);
-    }
+    // public function createTenant(Request $request){
+    //     $name = "itua-blog";
+    //     return $this->adminService->createTenant($name);
+    // }
 }
