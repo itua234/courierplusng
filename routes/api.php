@@ -15,10 +15,12 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::middleware('api')->group(function () {
+Route::middleware('api')->group(function () {});
+
+Route::group(['prefix' => 'v1'], function () {
     Route::group([
         'prefix' => 'posts', 
-        'middleware' => 'auth:sanctum'
+        'middleware' => ['auth:sanctum']
     ], function () {
         Route::get('/', [PostController::class, 'getUserPosts'])->name('get-user-posts');
         Route::get('/{id}', [PostController::class, 'getPostById'])->name('get-post-by-id');
