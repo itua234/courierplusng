@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 class Post extends Model
 {
     use HasUuids;
-    protected $connection = 'tenant';
+    //protected $connection = 'tenant';
 
     protected $fillable = [
         'title', 

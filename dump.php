@@ -1,156 +1,66 @@
-//     // Override the create method to handle 'name' and 'database'
-//     protected static function booted()
-//     {
-//         static::creating(function ($tenant) {
-//             // Ensure 'data' is initialized as an array
-//             $tenant->data = array_merge($tenant->data ?? [], [
-//                 'name' => $tenant->getOriginal('name') ?? null,
-//                 'database' => $tenant->getOriginal('database') ?? null,
-//             ]);
-//         });
-//     }
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-//     public function database(): DatabaseConfig
-//     {
-//         $databaseName = $this->data['database'] ?? 'tenant_' . $this->id;
+<p align="center">
+<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+</p>
 
-//         return new DatabaseConfig(
-//             name: $databaseName,
-//             user: env('DB_USERNAME', 'root'),
-//             password: env('DB_PASSWORD', ''),
-//             host: env('DB_HOST', '127.0.0.1'),
-//             port: env('DB_PORT', '3306')
-//         );
-//     }
-    
-//    // Accessor for the 'database' attribute
-//    public function getDatabaseAttribute()
-//    {
-//        return $this->data['database'] ?? null;
-//    }
-//    // Mutator for the 'database' attribute
-//    public function setDatabaseAttribute($value)
-//    {
-//        $this->data = array_merge($this->data ?? [], ['database' => $value]);
-//    }
+## About Laravel
 
-//    // Accessor for the 'name' attribute
-//    public function getNameAttribute()
-//    {
-//        return $this->data['name'] ?? null;
-//    }
-//     // Mutator for the 'name' attribute 
-//     public function setNameAttribute($value)
-//     {
-//         $this->data = array_merge($this->data ?? [], ['name' => $value]);
-//     }
+Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
+- [Simple, fast routing engine](https://laravel.com/docs/routing).
+- [Powerful dependency injection container](https://laravel.com/docs/container).
+- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
+- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
+- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
+- [Robust background job processing](https://laravel.com/docs/queues).
+- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-$tenant1 = App\Models\Tenant::create([
-    'data' => [
-        'name' => 'foo',
-        'database' => 'tenant1',
-    ],
-]);
-$tenant1->domains()->create(['domain' => 'foo.localhost']);
+Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
+## Learning Laravel
 
-$tenant2 = App\Models\Tenant::create([
-    'data' => [
-        'name' => 'bar',
-        'database' => 'tenant2',
-    ],
-]);
-$tenant2->domains()->create(['domain' => 'bar.localhost']);
+Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
+You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
 
+If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
+## Laravel Sponsors
 
-namespace App\Http\Controllers\Auth;
+We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
 
-use App\Http\Controllers\Controller;
-use App\Models\Tenant;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Stancl\Tenancy\TenantManager;
+### Premium Partners
 
-class TenantRegistrationController extends Controller
-{
-    public function register(Request $request)
-    {
-        // Step 1: Validate the request
-        $validated = $request->validate([
-            'tenant_name' => 'required|string|max:255|unique:tenants,data->name',
-            'domain' => 'required|string|unique:domains,domain',
-            'firstname' => 'required|string|max:255',
-            'lastname' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
+- **[Vehikl](https://vehikl.com/)**
+- **[Tighten Co.](https://tighten.co)**
+- **[WebReinvent](https://webreinvent.com/)**
+- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
+- **[64 Robots](https://64robots.com)**
+- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
+- **[Cyber-Duck](https://cyber-duck.co.uk)**
+- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
+- **[Jump24](https://jump24.co.uk)**
+- **[Redberry](https://redberry.international/laravel/)**
+- **[Active Logic](https://activelogic.com)**
+- **[byte5](https://byte5.de)**
+- **[OP.GG](https://op.gg)**
 
-        // Step 2: Create the tenant
-        $tenant = Tenant::create([
-            'id' => uniqid(), // Generate a unique tenant ID
-            'data' => [
-                'name' => $validated['tenant_name'],
-            ],
-        ]);
+## Contributing
 
-        // Step 3: Create the tenant's database
-        $tenant->createDatabase();
+Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-        // Step 4: Associate a domain with the tenant
-        $tenant->domains()->create(['domain' => $validated['domain']]);
+## Code of Conduct
 
-        // Step 5: Run the tenant's database connection
-        tenancy()->initialize($tenant);
+In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-        // Step 6: Create the user in the tenant's database
-        $user = User::create([
-            'firstname' => $validated['firstname'],
-            'lastname' => $validated['lastname'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-        ]);
+## Security Vulnerabilities
 
-        // Step 7: Return a success response
-        return response()->json([
-            'message' => 'Tenant and user created successfully!',
-            'tenant' => $tenant,
-            'user' => $user,
-        ]);
-    }
-}
+If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
+## License
 
-public function approveUser(User $user)
-{
-    $tenant = Tenant::create([
-        'name' => $user->name . "'s Blog",
-        'domain' => strtolower(str_replace(' ', '-', $user->name)) . '.myblog.com',
-    ]);
-
-    $user->update([
-        'status' => 'approved',
-        'tenant_id' => $tenant->id,
-    ]);
-}
-
-@foreach($pendingTenants as $tenant)
-    <div class="tenant-request">
-        <h3>{{ $tenant->name }}</h3>
-        <p>Requested by: {{ $tenant->user->email }}</p>
-        <div class="actions">
-            <form action="{{ route('admin.tenants.approve', $tenant) }}" method="POST">
-                @csrf
-                <button type="submit">Approve</button>
-            </form>
-            <form action="{{ route('admin.tenants.reject', $tenant) }}" method="POST">
-                @csrf
-                <input type="text" name="reason" placeholder="Rejection reason">
-                <button type="submit">Reject</button>
-            </form>
-        </div>
-    </div>
-@endforeach
+The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

@@ -2,8 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
-use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
+use App\Http\Controllers\PostController;
 
 Route::get('/', function () {
     return [
@@ -16,38 +15,15 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-// Central API Endpoints
 Route::middleware('api')->group(function () {
-    Route::get('/central/users', function () {
-        // Example: Fetch all users from the central database
-        return \App\Models\User::all();
-    });
-
-    Route::get('/central/info', function () {
-        return response()->json(['message' => 'This is a central API endpoint.']);
-    });
-
-    Route::get('/posts', function () {
-        return \App\Models\Post::all();
-        return 'This is th posts page';
+    Route::group([
+        'prefix' => 'posts', 
+        'middleware' => 'auth:sanctum'
+    ], function () {
+        Route::get('/', [PostController::class, 'getUserPosts'])->name('get-user-posts');
+        Route::get('/{id}', [PostController::class, 'getPostById'])->name('get-post-by-id');
+        Route::post('/', [PostController::class, 'store'])->name('create-post');
+        Route::put('/{id}', [PostController::class, 'update'])->name('update-post');
+        Route::delete('/{id}', [PostController::class, 'destroy'])->name('delete-post');
     });
 });
-
-// Tenant API Endpoints
-// Route::middleware([
-//     'api',
-//     InitializeTenancyByDomain::class,
-//     PreventAccessFromCentralDomains::class,
-// ])->group(function () {
-//     Route::get('/tenant/users', function () {
-//         // Example: Fetch all users from the tenant's database
-//         return \App\Models\User::all();
-//     });
-
-//     Route::get('/tenant/info', function () {
-//         return response()->json([
-//             'message' => 'This is a tenant API endpoint.',
-//             'tenant_id' => tenant('id'),
-//         ]);
-//     });
-// });

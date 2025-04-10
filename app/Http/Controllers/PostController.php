@@ -35,4 +35,37 @@ class PostController extends Controller
     {
         return $this->postService->store($request);
     }
+
+    public function getUserPosts(Request $request)
+    {
+        return $this->postService->getUserPosts();
+    }
+
+    public function update(Request $request, $id)
+    {
+        return $this->postService->update($request, $id);
+    }
+
+    /**
+     * Remove the specified post from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+    */
+    public function destroy($id)
+    {
+        return $this->postService->destroy($id);
+    }
+
+    /**
+     * Display the specified post.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getPostById(Request $request, $id)
+    {
+        return $this->postService->getPostById($id);
+    }
 }

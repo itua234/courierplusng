@@ -11,7 +11,7 @@
                         </a>
                     </div>
                     <h4 class="text-center" style="font-weight:700" id="auth-heading">Create Blog Post</h4>
-                    <form id="create-post" action="{{route('posts.store')}}" method="POST" enctype="multipart/form-data">
+                    <form id="create-post" data-url="{{route('posts.store')}}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
                             <div class="col-md-12 auth-form-group">
@@ -65,8 +65,63 @@
     </div>
 </section>
 
+<script src="{{asset('assets/libs/jquery/dist/jquery.min.js')}}"></script>
+<script src="{{asset('assets/libs/axios/axios.js')}}"></script>
 <script>
-    // Add any custom JavaScript here if needed
+   $("#create-post").on('submit', function (event) {
+        // Prevent the default form submission
+        event.preventDefault();
+        let url = $(this).data('url');
+
+         // Create a FormData object to handle file uploads
+        let formData = new FormData(this);
+        payload = {
+            image: $(this).find('input[name="image"]')[0].file,
+            //_token: $("input[name='_token']").val(),
+            title: $(this).find('input[name="title"]').val(),
+            content: $(this).find('textarea[name="content"]').val(),
+        };
+
+        // Disable the submit button to prevent multiple submissions
+        let btn = $(this).find("button[type='submit']");
+        btn.html(`<img src="{{asset('assets/images/loader.gif')}}" id="loader-gif">`);
+        btn.attr("disabled", true);
+
+        formData.forEach((value, key) => {
+            console.log(key, value);
+        });
+        console.log("Meta CSRF Token:", $("meta[name='csrf-token']").attr("content"));
+        console.log("Form CSRF Token:", $("input[name='_token']").val());
+        const config = {
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "multipart/form-data",
+                //"X-CSRF-TOKEN": $("meta[name='csrf-token']").attr("content"),
+                "X-Requested-With": "XMLHttpRequest"
+            }
+        };
+        axios.post(url, payload, config)
+        .then((res) => {
+            let data = res.data.results;
+            //$(".photo").attr("src", data.photo);
+        }) .catch(function(error){
+            let errors = error.response.data.error;
+            // if(errors.current_password){
+            //     $('#change-password .error').eq(0).text(errors.current_password);
+            //     $("#change-password input[name='current_password']").css("border", "1px solid #FA150A");
+            // }
+            // if(errors.password){
+            //     $('#change-password .error').eq(1).text(errors.password);
+            //     $("#change-password input[name='password']").css("border", "1px solid #FA150A");
+            // }
+            // if(errors.confirm_password){
+            //     $('#change-password .error').eq(2).text(errors.confirm_password);
+            //     $("#change-password input[name='confirm_password']").css("border", "1px solid #FA150A");
+            // }
+
+            btn.attr("disabled", false).text("Submit");
+        });
+    });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 </body>

@@ -25,8 +25,12 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 //     });
 // });
 Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
-Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
-
+Route::post('/posts/store', [PostController::class, 'store'])->name('posts.store');
+// Route::middleware('web')->group(function () {
+//     Route::group(['middleware' => ['auth']], function () {
+//         Route::post('/posts/store', [PostController::class, 'store'])->name('posts.store');
+//     });
+// });
 // Route::group(['middleware' => []], function () {
 //     Route::group([
 //         'prefix' => 'admin'

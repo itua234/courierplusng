@@ -74,14 +74,31 @@ class AuthService
     }
 
     public static function login($request){
-        if(Auth::attempt([
-            'email'=> $request->email,
-            'password'=> $request->password
-        ], true)){
+        // if(Auth::attempt([
+        //     'email'=> $request->email,
+        //     'password'=> $request->password
+        // ], true)){
+        //     $request->session()->regenerate();
+        //     return redirect('/')->with('success', 'Login successful!');
+        // }
+        // Session(['msg'=>'Invalid Login Credentials', 'alert'=>'danger']);
+        // return redirect()->back();
+        // Find the user by email
+        $user = User::where('email', $request->email)->first();
+
+        // Check if the user exists and the password matches
+        if ($user && Hash::check($request->password, $user->password)) {
+            // Log in the user
+            Auth::login($user, true);
+
+            // Regenerate the session
             $request->session()->regenerate();
+
             return redirect('/')->with('success', 'Login successful!');
         }
-        Session(['msg'=>'Invalid Login Credentials', 'alert'=>'danger']);
+
+        // If login fails, set an error message
+        session(['msg' => 'Invalid Login Credentials', 'alert' => 'danger']);
         return redirect()->back();
     }
 
